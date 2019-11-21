@@ -1,0 +1,32 @@
+# ignore macos
+.DS_Store
+.Thrashes
+
+# ignore windows
+Thumbs.db
+ehthumbs.db
+
+#ignore maven
+*.class
+target/
+
+# ignore idea
+.idea/
+*.iml
+
+# ignore eclipse
+.project
+.classpath
+.settings
+.metadata
+
+# ignore log
+*.log
+*.log.*
+
+# ignore release
+release.properties
+*.releaseBackup
+
+# redis
+*.rdb
