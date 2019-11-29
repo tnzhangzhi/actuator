@@ -12,7 +12,7 @@ import java.io.IOException;
 @ServerEndpoint("/webchart")
 public class WebServer {
 
-    private Session session;
+    private static Session session;
 
     @OnOpen
     public void onOpen(Session session) throws IOException {
@@ -23,5 +23,13 @@ public class WebServer {
     @OnClose
     public void onClose(){
 
+    }
+
+    public void sendMsg(String msg) throws IOException {
+        if(session!=null) {
+            session.getBasicRemote().sendText(msg);
+        }else{
+            System.out.println("websocket 回话还没开启");
+        }
     }
 }

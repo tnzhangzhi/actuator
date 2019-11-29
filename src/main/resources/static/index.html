@@ -16,6 +16,9 @@
         }
         socket.onmessage = function(msg){
             $('#content').append("<p>"+msg.data+"</p>");
+            if($('#content p').length > 10){
+                $('#content p')[1].remove();
+            }
         }
     }
 </script>

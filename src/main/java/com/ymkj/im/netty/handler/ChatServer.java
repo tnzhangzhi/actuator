@@ -12,18 +12,18 @@ import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
 @Component
-public class ChatServer {
+public class ChatServer implements CommandLineRunner {
 
     @Value("${im.socket.port}")
     private Integer port;
 
-    @PostConstruct
-    public void run() throws Exception{
+    public void start() throws Exception{
         System.out.println("netty server up ！！！");
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -48,5 +48,10 @@ public class ChatServer {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
         }
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        this.start();
     }
 }
