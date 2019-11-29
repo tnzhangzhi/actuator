@@ -1,0 +1,23 @@
+<html>
+<head>
+    <title>IM聊天室</title>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+</head>
+<body>
+<div id="content"></div>
+<script>
+    if(typeof(WebSocket) == "undefined"){
+        console.log("你的浏览器不支持websocket");
+    }else{
+        console.log("欢迎进入");
+        var socket = new WebSocket("ws://localhost:8080/webchart");
+        socket.onopen = function (ev) {
+            console.log("socket 已打开");
+        }
+        socket.onmessage = function(msg){
+            $('#content').append("<p>"+msg.data+"</p>");
+        }
+    }
+</script>
+</body>
+</html>
