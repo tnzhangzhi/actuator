@@ -10,7 +10,7 @@
         console.log("你的浏览器不支持websocket");
     }else{
         console.log("欢迎进入");
-        var socket = new WebSocket("ws://localhost:8080/webchart");
+        var socket = new WebSocket("ws://106.15.229.93:8080/webchart");
         socket.onopen = function (ev) {
             console.log("socket 已打开");
         }
