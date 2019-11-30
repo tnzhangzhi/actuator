@@ -14,8 +14,8 @@ public class ChatServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         String message = "你好，欢迎光临!";
-        String answer = Robot.send(message);
-        ctx.writeAndFlush(answer+"\r\n");
+//        String answer = Robot.send(message);
+        ctx.writeAndFlush(message+"\r\n");
     }
 
     @Override
