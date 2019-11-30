@@ -7,12 +7,14 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 @ServerEndpoint("/webchart")
 public class WebServer {
 
     private static Session session;
+    private AtomicLong atomicLong = new AtomicLong();
 
     @OnOpen
     public void onOpen(Session session) throws IOException {
@@ -26,8 +28,9 @@ public class WebServer {
     }
 
     public void sendMsg(String msg) throws IOException {
+        long count = atomicLong.incrementAndGet();
         if(session!=null) {
-            session.getBasicRemote().sendText(msg);
+            session.getBasicRemote().sendText(msg+"--"+count);
         }else{
             System.out.println("websocket 回话还没开启");
         }
