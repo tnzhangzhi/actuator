@@ -22,8 +22,8 @@ public class ChatClient {
     }
 
     public static void run(){
-        ExecutorService executorService = Executors.newFixedThreadPool(100);
-        for(int i=0;i<100;i++) {
+        ExecutorService executorService = Executors.newFixedThreadPool(200);
+        for(int i=0;i<200;i++) {
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {

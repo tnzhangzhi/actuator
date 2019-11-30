@@ -22,10 +22,9 @@ public class ChatServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         WebServer webServer = (WebServer) ContextHolder.get(WebServer.class);
         String message = (String) msg;
-//        String answer = Robot.send(message);
         String answer = Thread.currentThread().getName()+ DateUtil.format(new Date(),"yyyy-MM-dd HH:mm:ss");
         ctx.writeAndFlush(answer+"\r\n");
-        webServer.sendMsg("她:"+message);
+//        webServer.sendMsg("她:"+message);
         webServer.sendMsg("我:"+answer);
     }
 
