@@ -25,7 +25,7 @@ public class ChatServerHandler extends ChannelInboundHandlerAdapter {
         String answer = Thread.currentThread().getName()+"  "+ DateUtil.format(new Date(),"yyyy-MM-dd HH:mm:ss");
         ctx.writeAndFlush(answer+"\r\n");
 //        webServer.sendMsg("她:"+message);
-        webServer.sendMsg("我:"+answer);
+//        webServer.sendMsg("我:"+answer);
     }
 
     @Override
