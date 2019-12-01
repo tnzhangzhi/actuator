@@ -13,7 +13,7 @@ public class ChatServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        String message = "你好，欢迎光临!";
+        String message = "0";
 //        String answer = Robot.send(message);
         ctx.writeAndFlush(message+"\r\n");
     }
@@ -22,7 +22,7 @@ public class ChatServerHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         WebServer webServer = (WebServer) ContextHolder.get(WebServer.class);
         String message = (String) msg;
-        String answer = Thread.currentThread().getName()+"  "+ DateUtil.format(new Date(),"yyyy-MM-dd HH:mm:ss");
+        String answer = "2";
         ctx.writeAndFlush(answer+"\r\n");
 //        webServer.sendMsg("她:"+message);
 //        webServer.sendMsg("我:"+answer);

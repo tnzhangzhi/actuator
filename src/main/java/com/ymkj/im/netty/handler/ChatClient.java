@@ -22,12 +22,11 @@ public class ChatClient {
     }
 
     public static void run(){
-        ExecutorService executorService = Executors.newFixedThreadPool(200);
-        for(int i=0;i<200;i++) {
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    System.out.println("============");
+//        ExecutorService executorService = Executors.newFixedThreadPool(300);
+//        for(int i=0;i<300;i++) {
+//            executorService.submit(new Runnable() {
+//                @Override
+//                public void run() {
                     String host = "106.15.229.93";
                     int port = 8082;
                     EventLoopGroup workgroup = new NioEventLoopGroup();
@@ -46,7 +45,11 @@ public class ChatClient {
                                 ch.pipeline().addLast(new ChatClientHandler());
                             }
                         });
-
+                        for(int i=0;i<3000;i++) {
+                            ChannelFuture f = b.connect(host, port).sync();
+//                            f.channel().closeFuture().sync();
+                            System.out.println(i);
+                        }
                         ChannelFuture f = b.connect(host, port).sync();
                         f.channel().closeFuture().sync();
                     } catch (InterruptedException e) {
@@ -54,8 +57,8 @@ public class ChatClient {
                     } finally {
                         workgroup.shutdownGracefully();
                     }
-                }
-            });
-        }
+//                }
+//            });
+//        }
     }
 }
