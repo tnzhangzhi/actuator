@@ -15,7 +15,7 @@ public class ChatClientHandler extends ChannelInboundHandlerAdapter {
 //        System.out.println(message);
 //        String answer = Robot.send(message);
         String answer = "1";
-        ctx.writeAndFlush(answer+"\r\n");
+//        ctx.writeAndFlush(answer+"\r\n");
     }
 
     @Override

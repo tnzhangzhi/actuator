@@ -35,6 +35,7 @@ public class ChatClient {
                         b.group(workgroup);
                         b.channel(NioSocketChannel.class);
                         b.option(ChannelOption.SO_KEEPALIVE, true);
+                        b.option(ChannelOption.CONNECT_TIMEOUT_MILLIS,100000);
                         b.handler(new ChannelInitializer<SocketChannel>() {
 
                             @Override
