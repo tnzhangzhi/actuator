@@ -23,7 +23,7 @@ public class ChatServerHandler extends ChannelInboundHandlerAdapter {
         WebServer webServer = (WebServer) ContextHolder.get(WebServer.class);
         String message = (String) msg;
         String answer = "2";
-//        ctx.writeAndFlush(answer+"\r\n");
+        ctx.writeAndFlush(answer+"\r\n");
 //        webServer.sendMsg("她:"+message);
 //        webServer.sendMsg("我:"+answer);
     }

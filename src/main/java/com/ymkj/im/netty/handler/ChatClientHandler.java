@@ -12,10 +12,10 @@ public class ChatClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         String message = (String) msg;
-//        System.out.println(message);
+        System.out.println(message);
 //        String answer = Robot.send(message);
         String answer = "1";
-//        ctx.writeAndFlush(answer+"\r\n");
+        ctx.writeAndFlush(answer+"\r\n");
     }
 
     @Override
