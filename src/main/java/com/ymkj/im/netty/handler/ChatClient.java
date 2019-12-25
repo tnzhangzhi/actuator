@@ -41,7 +41,7 @@ public class ChatClient {
                     ch.pipeline().addLast(new ChatClientHandler());
                 }
             });
-            for(int i=0;i<8000;i++) {
+            for(int i=0;i<100;i++) {
                 try {
                     ChannelFuture f = b.connect(host, port).sync();
 //                            f.channel().closeFuture().sync();
