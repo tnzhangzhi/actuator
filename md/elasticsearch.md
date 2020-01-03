@@ -3,6 +3,10 @@ elasticsearch
 1.1 创建索引
 PUT lj_user
 {
+  "settings":{
+    "number_of_shards":1,
+    "number_of_replicas":2
+  },
   "mappings": {
     "properties": {
       "id":{
@@ -77,3 +81,10 @@ Multi-fields：见官方文档
 1.3.5 副本(replicas)副本提高系统容错，另外提升查询效率
 1.3.6 recovery代表数据恢复或重新分布，当有节点加入或退出会对索引分片进行重新分配
 问题：主分片设置多少合适？
+
+1.4 常用命令
+1.4.1 查看所有索引 GET /_cat/indices?v
+1.4.2 删除索引 DELETE lj_user
+
+第二课：分词
+第三课：搜索
