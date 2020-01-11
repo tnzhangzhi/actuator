@@ -131,5 +131,27 @@ GET lj_user/_doc/1/_termvectors?fields=name
 }
 
 第三课：搜索
+
 第四课：集群
+1.基础配置
+cluster.name: my-es //每个节点相同
+node.name: node-1 // 每个节点不通
+network.host: 0.0.0.0 //外网可以访问
+http.port: 9200  //默认9200可不配
+discovery.seed_hosts: ["172.16.91.143:9300", "172.16.182.98:9300", "172.16.91.145:9300"]  //自动发现组成集群
+cluster.initial_master_nodes: ["node-1", "node-2", "node-3"]  //指定可以用来选举的节点名称
+
+增加普通节点，只需要在discovery.seed_hosts里面添加新的节点ip和端口就行，无需重启集群，
+直接复制配置到新的节点机器，修改discovery.seed_hosts 和node.name,
+cluster.initial_master_nodes 无需修改
+如果是增加选举节点，参见官网
+
 第五课：运维
+第六课：索引别名
+第七课：索引模板
+第八课：滚动升级
+第九课：springboot 集成 elasticsearch
+测试3节点50个线程 写入tps 400 cpu使用15%
+测试3节点同时10个线程写，10个线程读 写入tps180，读tps 88 cpu使用25%
+见官网https://docs.spring.io/spring-data/elasticsearch/docs/current/reference/html/#reference
+_all ?
