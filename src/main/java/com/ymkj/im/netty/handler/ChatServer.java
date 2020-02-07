@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-@Component
+//@Component
 public class ChatServer implements CommandLineRunner {
 
     @Value("${im.socket.port}")

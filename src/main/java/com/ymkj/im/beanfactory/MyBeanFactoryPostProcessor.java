@@ -15,7 +15,7 @@ public class MyBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
         String[] names = configurableListableBeanFactory.getBeanDefinitionNames();
         for(String name : names){
             BeanDefinition bd = configurableListableBeanFactory.getBeanDefinition(name);
-            System.out.println(bd.getBeanClassName());
+//            System.out.println(bd.getBeanClassName());
         }
     }
 }
