@@ -14,17 +14,17 @@ public class ImServerApplication {
         SpringApplication.run(ImServerApplication.class, args);
     }
 
-    @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder){
-        return restTemplateBuilder.build();
-    }
-
-    @Bean
-    public CommandLineRunner run(RestTemplate restTemplate){
-        return args -> {
-            String s = restTemplate.getForObject("https://api.shumaidata.com",String.class);
-            System.out.println(s);
-        };
-    }
+//    @Bean
+//    public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder){
+//        return restTemplateBuilder.build();
+//    }
+//
+//    @Bean
+//    public CommandLineRunner run(RestTemplate restTemplate){
+//        return args -> {
+//            String s = restTemplate.getForObject("https://api.shumaidata.com",String.class);
+//            System.out.println(s);
+//        };
+//    }
 
 }
