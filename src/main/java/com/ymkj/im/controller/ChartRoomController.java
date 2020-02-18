@@ -12,7 +12,7 @@ public class ChartRoomController {
         return "index";
     }
 
-    @RequestMapping("/")
+    @RequestMapping("/chart")
     @ResponseBody
     public String greeting(){
         return "hello world";
