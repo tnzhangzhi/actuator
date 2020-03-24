@@ -155,3 +155,47 @@ cluster.initial_master_nodes 无需修改
 测试3节点同时10个线程写，10个线程读 写入tps180，读tps 88 cpu使用25%
 见官网https://docs.spring.io/spring-data/elasticsearch/docs/current/reference/html/#reference
 _all ?
+
+
+可以先创建一个模板模糊匹配索引
+PUT _template/template_origin
+{
+  "index_patterns": ["origin-data*"],
+  "settings":{
+    "number_of_shards":1,
+    "number_of_replicas":0
+  },
+  "mappings": {
+    "properties": {
+      "cost":{
+        "type": "long"
+      },
+      "params":{
+        "type": "text",
+        "fields": {
+          "keyword":{
+            "type":"keyword"
+          }
+        }
+      },
+      "result":{
+        "type": "text",
+        "fields": {
+          "keyword":{
+            "type":"keyword"
+          }
+        }
+      },
+      "orderNo":{
+        "type": "keyword"
+      },
+      "supplier":{
+        "type": "keyword"
+      },
+      "createTime":{
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss"
+      }
+    }
+  }
+}

@@ -20,9 +20,9 @@ spec:
     spec:
       containers:
       - name: webapp1
-        image: test/springboot
+        image: tnzhangzhi/springboot
         ports:
-        - containerPort: 80
+        - containerPort: 8080
 
 使用一下命令将其部署到集群
 kubectl create -f deployment.yaml

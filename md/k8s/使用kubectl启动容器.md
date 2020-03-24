@@ -10,7 +10,7 @@ kubectl run 类似集群级别搬运工
 
 任务（task） 
 以下命令将启动一个名为http的部署，该部署将基于镜像test/springboot启动一个容器
-kubectl run http --image=test/springboot --replicas=1
+kubectl run http --image=tnzhangzhi/springboot --replicas=1
 然后你可以是kubectl 查看部署状态
 kubectl get deployments
 查看kubernetes 创建部署过程描述
@@ -23,7 +23,7 @@ kubectl describe deployment http
 
 任务
 使用一下命令暴露容器端口80到主机的外部ip的8000端口
-kubectl expose deployment http --external-ip="172.17.0.29" --port=8000 --target-port=80
+kubectl expose deployment http --external-ip="192.168.100.7" --port=8080 --target-port=8080
 然后，你可以通过ping通主机并查看HTTP服务的结果
 curl http://172.17.0.29:8000
 
@@ -32,7 +32,7 @@ curl http://172.17.0.29:8000
 
 任务
 使用命令创建在端口8001上暴露第二个http服务。
-kubectl run httpexposed --image=test/springboot --replicas=1 --port=80 --hostport=8001
+kubectl run httpexposed --image=tnzhangzhi/springboot --replicas=1 --port=80 --hostport=8001
 你可以测试服务
 curl http://172.17.0.29:8001
 在后台，这通过docker port mapping 暴露pod
