@@ -199,3 +199,9 @@ PUT _template/template_origin
     }
   }
 }
+
+term 结构化查询，不会对查询条件分词，如果存储时字段分词了，那么分词后的结果包含查询条件，就返回，否则不返回
+match 模糊查询，对查询条件分词，如果文档中包含部分查询条件就返回
+match_phrase 对查询条件分词，如果存储字段分词了，那么满足两个条件则返回1：查询条件分词后的term在存储字段上有都有 2：在存储字段上的顺序和分词的顺序一致
+query_string 和match_phrase 不同点是 在存储字段上的顺序和分词的顺序可以不一致
+查看某个字段分词情况 GET /index/type/id/_termvectors?fields=字段

@@ -76,3 +76,5 @@ kubectl port-forward svc/demo 8080:8080
 curl localhost:8080/actuator/health
 
 {"status":"UP"}
+
+复制docker容器内部文件：docker cp 容器名称：/usr/local/tomcat/webapps/test/js/test.js  /opt
