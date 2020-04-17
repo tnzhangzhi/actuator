@@ -205,3 +205,8 @@ match 模糊查询，对查询条件分词，如果文档中包含部分查询�
 match_phrase 对查询条件分词，如果存储字段分词了，那么满足两个条件则返回1：查询条件分词后的term在存储字段上有都有 2：在存储字段上的顺序和分词的顺序一致
 query_string 和match_phrase 不同点是 在存储字段上的顺序和分词的顺序可以不一致
 查看某个字段分词情况 GET /index/type/id/_termvectors?fields=字段
+
+导出（需安装elasticdump）：
+./elasticdump --input=http://elastic:ShuMai@001@es-cn-v0h1brquk000m5qwf.elasticsearch.aliyuncs.com:9200/ty-record-index --output=query2.json  --searchBody='{"query": { "match": {"category.keyword": "category_driving_card_query"}}}' 
+
+elasticdump --input=./query.json --output=http://xx.xx.xx.xx:9200/索引名称   --type=data  
