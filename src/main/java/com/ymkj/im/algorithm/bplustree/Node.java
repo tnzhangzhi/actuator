@@ -13,5 +13,7 @@ public abstract class Node {
         return keys.size();
     }
 
-    abstract boolean isLeaf();
+    boolean isLeaf(){
+        return nodeType==NodeType.Leaf?true:false;
+    }
 }

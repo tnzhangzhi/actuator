@@ -8,10 +8,11 @@ public class LeafNode extends Node{
 
     public LeafNode(boolean isRoot){
         this.isRoot = isRoot;
+        this.nodeType = NodeType.Leaf;
     }
 
     @Override
     boolean isLeaf() {
-        return true;
+        return nodeType==NodeType.Leaf?true:false;
     }
 }
