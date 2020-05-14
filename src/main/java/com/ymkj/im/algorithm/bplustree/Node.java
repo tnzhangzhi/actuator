@@ -1,7 +1,10 @@
 package com.ymkj.im.algorithm.bplustree;
 
+import lombok.Data;
+
 import java.util.LinkedList;
 
+@Data
 public abstract class Node {
 
     private LinkedList<Long> keys;
@@ -9,6 +12,7 @@ public abstract class Node {
     protected NodeType nodeType;
     private Node pre;
     private Node next;
+    private Node parent;
 
     public int getCapacity(){
         return keys.size();
@@ -16,6 +20,10 @@ public abstract class Node {
 
     public void addKey(int index,Long key){
         keys.add(index,key);
+    }
+
+    public void addKey(Long key){
+        keys.add(key);
     }
 
     boolean isLeaf(){

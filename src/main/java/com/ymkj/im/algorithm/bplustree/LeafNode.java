@@ -1,11 +1,16 @@
 package com.ymkj.im.algorithm.bplustree;
 
 
+import lombok.Data;
+
 import java.util.LinkedList;
 
+@Data
 public class LeafNode extends Node{
 
     private LinkedList<String> values;
+    private Node next;
+    private Node pre;
 
     public LeafNode(boolean isRoot){
         this.isRoot = isRoot;
