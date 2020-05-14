@@ -1,9 +1,10 @@
 package com.ymkj.im.algorithm.bplustree;
 
-import com.ymkj.im.datastructure.LinkList;
+import java.util.LinkedList;
 
 public abstract class Node {
-    private LinkList<Long> keys;
+
+    private LinkedList<Long> keys;
     protected boolean isRoot;
     protected NodeType nodeType;
     private Node pre;
@@ -13,7 +14,19 @@ public abstract class Node {
         return keys.size();
     }
 
+    public void addKey(int index,Long key){
+        keys.add(index,key);
+    }
+
     boolean isLeaf(){
         return nodeType==NodeType.Leaf?true:false;
+    }
+
+    public LinkedList<Long> getKeys() {
+        return keys;
+    }
+
+    public void setKeys(LinkedList<Long> keys) {
+        this.keys = keys;
     }
 }
