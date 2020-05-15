@@ -14,6 +14,10 @@ public abstract class Node {
     private Node next;
     private Node parent;
 
+    public Node(){
+        keys = new LinkedList<>();
+    }
+
     public int getCapacity(){
         return keys.size();
     }

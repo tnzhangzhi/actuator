@@ -9,6 +9,7 @@ public class TreeNode extends Node{
 
   public TreeNode(){
     this.nodeType = NodeType.Internal;
+    this.nodes = new LinkedList<>();
   }
 
   public void addNode(Node node){

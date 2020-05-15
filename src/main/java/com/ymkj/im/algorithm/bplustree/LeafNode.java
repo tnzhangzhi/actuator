@@ -15,6 +15,7 @@ public class LeafNode extends Node{
     public LeafNode(boolean isRoot){
         this.isRoot = isRoot;
         this.nodeType = NodeType.Leaf;
+        this.values = new LinkedList<>();
     }
 
     public void addValue(int index,String value){

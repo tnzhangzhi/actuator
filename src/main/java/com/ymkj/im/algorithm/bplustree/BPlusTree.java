@@ -1,9 +1,14 @@
 package com.ymkj.im.algorithm.bplustree;
 
+import com.alibaba.fastjson.JSONObject;
+
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Random;
 
 public class BPlusTree {
+
 
     private int order = 5;
     private int maxKey = 4; //order-1;
@@ -33,6 +38,11 @@ public class BPlusTree {
 
     private Node getLeaf(TreeNode node,Long key) {
         int keyIndex = caculateKeyIndex(node.getKeys(),key);
+        System.out.println("key="+key);
+        System.out.println("keys="+node.getKeys());
+        System.out.println("nodesize="+node.getNodes().size());
+        System.out.println("nodes="+node.getNodes());
+        System.out.println("index="+keyIndex);
         return node.getNodes().get(keyIndex);
     }
 
@@ -50,22 +60,53 @@ public class BPlusTree {
                 parent = new TreeNode();
                 root = parent;
             }
-            //当前节点作为左节点，新建一个右节点
-            LeafNode right = new LeafNode(false);
-            int nodeIndex = parent.getNodeIndex(node);
-            int keyIndex = (node.getKeys().size() - 1) / 2;
+            if(node.isLeaf()) {
+                //当前节点作为左节点，新建一个右节点
+                LeafNode right = new LeafNode(false);
+                right.setParent(parent);
+                node.setParent(parent);
+                int nodeIndex = parent.getNodeIndex(node);
+                int keyIndex = (node.getKeys().size() - 1) / 2;
+                Long key = node.getKeys().get(keyIndex);
 
-            for (int i = keyIndex; i < node.getKeys().size(); i++) {
-                right.getKeys().add(node.getKeys().remove(i));
-            }
+                for (int i = keyIndex; i < node.getKeys().size(); i++) {
+                    right.getKeys().add(node.getKeys().remove(i));
+                    right.getValues().add(((LeafNode) node).getValues().remove(i));
+                    i--;
+                }
 
-            if(nodeIndex>=0){
-                parent.getNodes().add(nodeIndex+1,right);
+                if (nodeIndex >= 0) {
+                    parent.getNodes().add(nodeIndex + 1, right);
+                } else {
+                    parent.getNodes().add(node);
+                    parent.getNodes().add(right);
+                }
+                parent.addKey(nodeIndex < 0 ? 0 : nodeIndex, key);
             }else{
-                parent.getNodes().add(node);
-                parent.getNodes().add(right);
+                TreeNode right = new TreeNode();
+                right.setParent(parent);
+                node.setParent(parent);
+                int nodeIndex = parent.getNodeIndex(node);
+                int keyIndex = (node.getKeys().size() - 1) / 2;
+                Long key = node.getKeys().get(keyIndex);
+
+                for (int i = keyIndex; i < node.getKeys().size(); i++) {
+                    right.getKeys().add(node.getKeys().remove(i));
+                    i--;
+                }
+                for (int i = keyIndex; i < ((TreeNode)node).getNodes().size(); i++) {
+                    right.getNodes().add(((TreeNode)node).getNodes().remove(i));
+                    i--;
+                }
+
+                if (nodeIndex >= 0) {
+                    parent.getNodes().add(nodeIndex + 1, right);
+                } else {
+                    parent.getNodes().add(node);
+                    parent.getNodes().add(right);
+                }
+                parent.addKey(nodeIndex < 0 ? 0 : nodeIndex, key);
             }
-            parent.addKey(nodeIndex, node.getKeys().get(keyIndex));
             updateNode(parent);
         }
     }
@@ -102,14 +143,58 @@ public class BPlusTree {
     }
 
     public static void main(String[] args) {
-        LinkedList list = new LinkedList();
-        for(int i=0;i<10;i++) {
-            long key = new Random().nextInt(100);
-            int index = caculateKeyIndex(list, key);
-            list.add(index,key);
-            System.out.println("key="+key);
-            System.out.println(list);
+        BPlusTree tree = new BPlusTree();
+        for(int i=0;i<100;i++) {
+            long key = new Random().nextInt(10000);
+            tree.insert(key,key+"");
+        }
+        printTree2(tree);
+
+    }
+
+    private static void printTree2(BPlusTree tree) {
+        Node node = tree.root;
+        Map map = new HashMap();
+        if(node.isLeaf()){
+
+        }else{
+            TreeNode treeNode = (TreeNode) node;
+            printNode2(treeNode);
         }
 
+    }
+
+    private static void printNode2(TreeNode treeNode,Map map) {
+        map.put("name",treeNode.getKeys());
+        Object[] a = new Object[treeNode.getNodes().size()];
+        for(int i=0;i<treeNode.getNodes().size();i++){
+            a[i] = treeNode.getNodes().get(i).getKeys();
+        }
+        map.put("children",a);
+    }
+
+    private static void printTree(BPlusTree tree) {
+        Node node = tree.root;
+        printNode(node);
+
+    }
+
+    private static void printNode(Node node) {
+        if(node.isLeaf()){
+            LeafNode leaf = (LeafNode) node;
+            System.out.println("##########################");
+            System.out.println(leaf.getKeys());
+            System.out.println(leaf.getValues());
+            System.out.println("########################");
+        }else{
+            TreeNode treeNode = (TreeNode) node;
+            System.out.println("***********************");
+            System.out.println(node.getKeys());
+            System.out.println("***********************");
+            LinkedList<Node> nodeList = treeNode.getNodes();
+            for(int i=0;i<nodeList.size();i++){
+                printNode(nodeList.get(i));
+            }
+        }
     }
 }
