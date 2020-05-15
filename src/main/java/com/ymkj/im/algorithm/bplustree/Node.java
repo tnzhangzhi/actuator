@@ -1,5 +1,6 @@
 package com.ymkj.im.algorithm.bplustree;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
 import java.util.LinkedList;
@@ -7,17 +8,25 @@ import java.util.LinkedList;
 @Data
 public abstract class Node {
 
+    @JSONField(name = "name")
     private LinkedList<Long> keys;
+    @JSONField(serialize = false)
     protected boolean isRoot;
+    @JSONField(serialize = false)
     protected NodeType nodeType;
+
+    @JSONField(serialize = false)
     private Node pre;
+    @JSONField(serialize = false)
     private Node next;
+    @JSONField(serialize = false)
     private Node parent;
 
     public Node(){
         keys = new LinkedList<>();
     }
 
+    @JSONField(serialize = false)
     public int getCapacity(){
         return keys.size();
     }

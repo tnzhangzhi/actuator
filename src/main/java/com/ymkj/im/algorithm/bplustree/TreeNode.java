@@ -1,10 +1,12 @@
 package com.ymkj.im.algorithm.bplustree;
 
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.LinkedList;
 
 public class TreeNode extends Node{
-
+  @JSONField(name="children")
   LinkedList<Node> nodes;
 
   public TreeNode(){

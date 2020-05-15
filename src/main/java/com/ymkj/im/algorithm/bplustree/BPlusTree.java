@@ -1,5 +1,6 @@
 package com.ymkj.im.algorithm.bplustree;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.HashMap;
@@ -38,11 +39,6 @@ public class BPlusTree {
 
     private Node getLeaf(TreeNode node,Long key) {
         int keyIndex = caculateKeyIndex(node.getKeys(),key);
-        System.out.println("key="+key);
-        System.out.println("keys="+node.getKeys());
-        System.out.println("nodesize="+node.getNodes().size());
-        System.out.println("nodes="+node.getNodes());
-        System.out.println("index="+keyIndex);
         return node.getNodes().get(keyIndex);
     }
 
@@ -144,7 +140,7 @@ public class BPlusTree {
 
     public static void main(String[] args) {
         BPlusTree tree = new BPlusTree();
-        for(int i=0;i<100;i++) {
+        for(int i=0;i<6;i++) {
             long key = new Random().nextInt(10000);
             tree.insert(key,key+"");
         }
@@ -155,22 +151,21 @@ public class BPlusTree {
     private static void printTree2(BPlusTree tree) {
         Node node = tree.root;
         Map map = new HashMap();
-        if(node.isLeaf()){
-
-        }else{
-            TreeNode treeNode = (TreeNode) node;
-            printNode2(treeNode);
-        }
+        System.out.println(JSON.toJSONString(node));
 
     }
 
-    private static void printNode2(TreeNode treeNode,Map map) {
-        map.put("name",treeNode.getKeys());
-        Object[] a = new Object[treeNode.getNodes().size()];
-        for(int i=0;i<treeNode.getNodes().size();i++){
-            a[i] = treeNode.getNodes().get(i).getKeys();
+    private static Map printNode2(Node node,Map map) {
+        map.put("name",node.getKeys());
+        if(!node.isLeaf()){
+            TreeNode t = (TreeNode) node;
+            Map[] a = new HashMap[t.getNodes().size()];
+            for(int i=0;i<t.getNodes().size();i++){
+                a[i] = printNode2(t.getNodes().get(i),map);
+            }
+            map.put("children",a);
         }
-        map.put("children",a);
+        return map;
     }
 
     private static void printTree(BPlusTree tree) {
