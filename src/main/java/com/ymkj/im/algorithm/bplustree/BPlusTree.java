@@ -6,6 +6,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import java.util.*;
 
+//内存版本
 public class BPlusTree {
 
 
@@ -106,10 +107,6 @@ public class BPlusTree {
             }
             updateNode(parent);
         }
-    }
-
-    public void addNonNull(){
-
     }
 
     private static int caculateKeyIndex(LinkedList<Long> keys,Long key) {
