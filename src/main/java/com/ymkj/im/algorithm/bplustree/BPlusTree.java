@@ -2,18 +2,16 @@ package com.ymkj.im.algorithm.bplustree;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class BPlusTree {
 
 
-    private int order = 5;
-    private int maxKey = 4; //order-1;
-    private int minKey = 2; //Math.ceil(order/2)-1;
+    private int order = 8;
+    private int maxKey = 7; //order-1;
+    private int minKey = 3; //Math.ceil(order/2)-1;
     Node root;
     Node leafHead;
     
@@ -90,8 +88,11 @@ public class BPlusTree {
                     right.getKeys().add(node.getKeys().remove(i));
                     i--;
                 }
-                for (int i = keyIndex; i < ((TreeNode)node).getNodes().size(); i++) {
-                    right.getNodes().add(((TreeNode)node).getNodes().remove(i));
+                right.getKeys().remove(0);
+                for (int i = keyIndex+1; i < ((TreeNode)node).getNodes().size(); i++) {
+                    Node temp =  ((TreeNode)node).getNodes().remove(i);
+                    temp.setParent(right);
+                    right.getNodes().add(temp);
                     i--;
                 }
 
@@ -140,18 +141,25 @@ public class BPlusTree {
 
     public static void main(String[] args) {
         BPlusTree tree = new BPlusTree();
-        for(int i=0;i<6;i++) {
+        LinkedList<Long> list = new LinkedList<>();
+        int[] l = new int[]{8309, 2914, 51, 2622, 1561, 1558, 5485, 7880, 1083, 8974, 3784, 4967, 2128, 5594, 2937, 3242, 1222, 7820, 8848, 7841, 3514, 9455, 8339, 4362, 4225, 7925, 2208, 9137};
+
+        for(int i=0;i<1024;i++) {
             long key = new Random().nextInt(10000);
+            while(list.contains(key)){
+                key = new Random().nextInt(10000);
+            }
+            list.add(key);
+            System.out.println(list);
             tree.insert(key,key+"");
         }
         printTree2(tree);
-
     }
 
     private static void printTree2(BPlusTree tree) {
         Node node = tree.root;
         Map map = new HashMap();
-        System.out.println(JSON.toJSONString(node));
+        System.out.println(JSON.toJSONString(node, SerializerFeature.DisableCircularReferenceDetect));
 
     }
 
