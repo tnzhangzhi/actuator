@@ -112,11 +112,40 @@ public class BpTree {
 
     public void insert(Long key,String value){
         if(isFull(root)){
-            InterNode parent = new InterNode(NodeType.Internal,);
-            splitNode(root,key);
+            InterNode parent = new InterNode(NodeType.Internal,getCurrentIndex());
+            LeafNode left = (LeafNode) root;
+            root = parent;
+            splitNode(parent,left,key);
+            insertData(parent,key,value);
         }else {
             insertData(root, key, value);
         }
+    }
+
+    private void splitNode(InterNode parent,Node left, Long key) {
+        int index = caculateIndex();
+        if(left.nodeType == NodeType.Internal){
+            InterNode right = new InterNode(NodeType.Internal,getCurrentIndex());
+
+        }else{
+            LeafNode right = new LeafNode(NodeType.Leaf,getCurrentIndex());
+            parent.getPointers().add(left.getPageIndex());
+            parent.getPointers().add(right.getPageIndex());
+            ((LeafNode)left).setNextpoint(right.getPageIndex());
+            right.setPrepoint(left.getPageIndex());
+            for(int i=0;i<index;i++){
+                right.getValues().add(((LeafNode) left).getValues().pop());
+                right.getKeys().add(left.getKeys().pop());
+            }
+        }
+    }
+
+    private int caculateIndex() {
+        return 0;
+    }
+
+    public Long getCurrentIndex(){
+        return (long)(pageSize*(totalPages+1));
     }
 
     private boolean isFull(Node node) {
@@ -125,9 +154,9 @@ public class BpTree {
 
     public void insertData(Node node,Long key,String value){
         if(node.getNodeType()==NodeType.Leaf){
-
+            //直接插入
         }else{
-
+            //查找下一级判断是否满了，循环
         }
     }
 
