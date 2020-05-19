@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedList;
 
 public class BpTree {
 
@@ -16,7 +17,7 @@ public class BpTree {
     int maxKey; //每个节点最大key个数
     int minKey; //ceil(2m/2)-1
     int m = 3;//2m为树的阶数;
-    int valLength=10;
+    int valLength=20;
     Node root;
     int pageSize = 1024;//每页大小,单位字节
     RandomAccessFile treeFile;
@@ -71,6 +72,7 @@ public class BpTree {
             treeFile.writeLong(leafNode.getNextpoint());
             for (int i = 0; i < leafNode.getKeys().size(); i++) {
                 treeFile.writeLong(leafNode.getKeys().get(i));
+                String val = leafNode.getValues().get(i);
                 treeFile.write(leafNode.getValues().get(i).getBytes(StandardCharsets.UTF_8));
             }
         } else {
@@ -98,7 +100,7 @@ public class BpTree {
             LeafNode leafNode = new LeafNode(nodeType, index,pre,next);
             for (int i = 0; i < length; i++) {
                 leafNode.getKeys().add(treeFile.readLong());
-                byte[] bytes = new byte[10];
+                byte[] bytes = new byte[valLength];
                 treeFile.read(bytes);
                 leafNode.getValues().add(new String(bytes, StandardCharsets.UTF_8));
             }
@@ -157,28 +159,20 @@ public class BpTree {
     }
 
     private int caculateIndex(Node node,Long key) {
-        int start = 0;
-        int end = node.getKeys().size()-1;
-        if(start>end){
+        if(node.getKeys().size()==0){
             return 0;
-        }else if(start==end){
-            if(key>node.getKeys().get(0)){
-                return 1;
-            }else{
-                return 0;
-            }
-        } else{
-            while(start < end) {
-                int m = (start + end) / 2;
-                Long temp = node.getKeys().get(m);
-                if (key > temp) {
-                    start = m + 1;
-                } else if (key < temp) {
-                    end = m - 1;
-                }
-            }
-            return end<0?0:end;
         }
+        int start = 0;
+        int end = node.getKeys().size();
+        while((end-start) >0){
+            int index = (end+start)/2;
+            if(key > node.getKeys().get(index)){
+                start = index+1;
+            }else{
+                end = index;
+            }
+        }
+        return end;
     }
 
 
@@ -199,13 +193,12 @@ public class BpTree {
             writeNode(node);
         }else{
             //查找下一级判断是否满了，循环
-            Node left = readNode(((InterNode)node).getPointers().get(index));
-            if(isFull(left)){
-                splitNode((InterNode)node,left,key);
-                Node right = readNode(((InterNode) node).getPointers().get(index));
-                insertData(left,key,value);
+            Node child = readNode(((InterNode)node).getPointers().get(index));
+            if(isFull(child)){
+                splitNode((InterNode)node,child,key);
+                insertData(node,key,value);
             }else{
-                insertData(left,key,value);
+                insertData(child,key,value);
             }
         }
     }
@@ -214,25 +207,42 @@ public class BpTree {
         if(s == null) {
             s = " ";
         }
-
-        if(s.length() >= this.valLength) {
-            s = s.substring(0, this.valLength);
-        } else{
-            int add = this.valLength - s.length();
-            for(int i = 0; i < add; i++) {
-                s = s + " ";
+        int len = s.getBytes(StandardCharsets.UTF_8).length;
+        if(len >= this.valLength) {
+            s=s.substring(0,s.length()-1);
+            while(s.getBytes(StandardCharsets.UTF_8).length > valLength){
+                s=s.substring(0,s.length()-1);
             }
+            len = s.getBytes(StandardCharsets.UTF_8).length;
+            int add = valLength-len;
+            if(add > 0){
+                addSpace(s,add);
+            }
+        } else{
+            int add = this.valLength - len;
+            s = addSpace(s,add);
         }
         return s;
+    }
+
+    public String addSpace(String s,int num){
+        StringBuffer sbf = new StringBuffer(s);
+        for(int i = 0; i < num; i++) {
+            sbf.append(" ");
+        }
+        return sbf.toString();
     }
 
     public static void main(String[] args) throws IOException {
         Integer[] keys = new Integer[]{3633, 1713, 1687, 2257, 742, 4031, 477, 4604, 9713, 9210, 9860, 4917, 4727, 1622, 8852, 1859, 3952, 3218,
                 8680, 2739, 5591, 6315, 3749, 5417, 1873, 9891, 2891, 1416};
         BpTree bpTree = new BpTree();
-        for(int i=0;i<6;i++){
+        for(int i=0;i<keys.length;i++){
+            System.out.println(keys[i]);
             bpTree.insert((long)keys[i],keys[i]+"你好!");
         }
+
+
 
  
 
