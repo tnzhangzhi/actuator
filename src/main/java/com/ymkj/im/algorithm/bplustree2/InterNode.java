@@ -11,5 +11,6 @@ public class InterNode extends Node{
 
     public InterNode(NodeType nodeType, Long pageIndex) {
         super(nodeType, pageIndex);
+        this.pointers = new LinkedList<>();
     }
 }

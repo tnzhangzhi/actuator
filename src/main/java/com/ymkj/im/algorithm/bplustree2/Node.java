@@ -14,5 +14,6 @@ public abstract class Node {
     public Node(NodeType nodeType,Long pageIndex){
         this.nodeType = nodeType;
         this.pageIndex = pageIndex;
+        this.keys = new LinkedList<>();
     }
 }

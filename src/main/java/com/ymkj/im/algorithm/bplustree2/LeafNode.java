@@ -12,7 +12,10 @@ public class LeafNode extends Node{
     Long prepoint;
     Long nextpoint;
 
-    public LeafNode(NodeType nodeType, Long pageIndex) {
+    public LeafNode(NodeType nodeType, Long pageIndex,Long pre,Long next) {
         super(nodeType, pageIndex);
+        this.prepoint = pre;
+        this.nextpoint = next;
+        this.values = new LinkedList<>();
     }
 }
