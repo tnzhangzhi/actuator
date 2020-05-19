@@ -18,3 +18,7 @@ inux下的lwp也可以通用ps来查看
 ps -mp pid号 -o THREAD,tid,lwp,nlwp,time,rss,size,%mem
 jmap -histo:live pid |head -20
 java  -XX:+PrintCommandLineFlags  -version 查看jvm使用的算法
+
+
+日志搜索
+cat -n all.log |grep "NullPointerException" -C 10
