@@ -93,10 +93,10 @@ public class BpTree {
         treeFile.seek(index);
         int type = treeFile.readShort();
         int length = treeFile.readInt();
-        long pre = treeFile.readLong();
-        long next = treeFile.readLong();
         NodeType nodeType = NodeType.get(type);
         if (nodeType == NodeType.Leaf) {
+            long pre = treeFile.readLong();
+            long next = treeFile.readLong();
             LeafNode leafNode = new LeafNode(nodeType, index,pre,next);
             for (int i = 0; i < length; i++) {
                 leafNode.getKeys().add(treeFile.readLong());
@@ -162,6 +162,7 @@ public class BpTree {
         if(left.nodeType ==NodeType.Leaf) {
             parent.getKeys().add(keyIndex, right.getKeys().get(0));
         }else{
+            parent.getKeys().add(keyIndex, left.getKeys().removeLast());
             ((InterNode) right).getPointers().push(((InterNode) left).getPointers().removeLast());
         }
         writeNode(parent);
@@ -245,13 +246,13 @@ public class BpTree {
     }
 
     public static void main(String[] args) throws IOException {
-        Integer[] keys = new Integer[]{3633, 1713, 1687, 2257, 742, 4031, 477, 4604, 9713, 9210, 9860, 4917, 4727, 1622, 8852, 1859, 3952, 3218,
-                8680, 2739, 5591, 6315, 3749, 5417, 1873, 9891, 2891, 1416};
-        BpTree bpTree = new BpTree();
-        for(int i=0;i<keys.length;i++){
-            System.out.println(keys[i]);
-            bpTree.insert((long)keys[i],keys[i]+"你好!");
-        }
+//        Integer[] keys = new Integer[]{3633, 1713, 1687, 2257, 742, 4031, 477, 4604, 9713, 9210, 9860, 4917, 4727, 1622, 8852, 1859, 3952, 3218,
+//                8680, 2739, 5591, 6315, 3749, 5417, 1873, 9891, 2891, 1416};
+//        BpTree bpTree = new BpTree();
+//        for(int i=0;i<keys.length;i++){
+//            System.out.println(keys[i]);
+//            bpTree.insert((long)keys[i],keys[i]+"你好!");
+//        }
 
 
 
