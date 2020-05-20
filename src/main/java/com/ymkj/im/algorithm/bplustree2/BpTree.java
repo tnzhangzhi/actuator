@@ -125,37 +125,48 @@ public class BpTree {
     public void insert(Long key,String value) throws IOException {
         if(isFull(root)){
             InterNode parent = new InterNode(NodeType.Internal,getCurrentIndex());
-            LeafNode left = (LeafNode) root;
+            writeHeader(parent);
+            Node left = root;
             root = parent;
             parent.getPointers().add(left.getPageIndex());
-            splitNode(parent,left,key);
-            insertData(parent,key,value);
+            splitNode(parent, left, key);
+            insertData(parent, key, value);
         }else {
             insertData(root, key, value);
         }
     }
 
     private void splitNode(InterNode parent,Node left, Long key) throws IOException {
+        Node right;
+        int index = m-1;
+        int keyIndex = parent.pointers.indexOf(left.getPageIndex());
+
         if(left.nodeType == NodeType.Internal){
-            InterNode right = new InterNode(NodeType.Internal,getCurrentIndex());
-
-        }else{
-            LeafNode right = new LeafNode(NodeType.Leaf,getCurrentIndex(),left.getPageIndex(),((LeafNode)left).getNextpoint());
-            writeHeader(right);
-            int keyIndex = parent.pointers.indexOf(left.getPageIndex());
-            parent.getPointers().add(keyIndex+1,right.getPageIndex());
+            right = new InterNode(NodeType.Internal,getCurrentIndex());
+        }else {
+            right = new LeafNode(NodeType.Leaf, getCurrentIndex(), left.getPageIndex(), ((LeafNode) left).getNextpoint());
             ((LeafNode)left).setNextpoint(right.getPageIndex());
-            int index = m-1;
-            for(int i=0;i<index;i++){
-                right.getValues().push(((LeafNode) left).getValues().removeLast());
-                right.getKeys().push(left.getKeys().removeLast());
-
-            }
-            parent.getKeys().add(keyIndex,right.getKeys().get(0));
-            writeNode(parent);
-            writeNode(right);
-            writeNode(left);
         }
+        writeHeader(right);
+        parent.getPointers().add(keyIndex+1,right.getPageIndex());
+
+        for(int i=0;i<index;i++){
+            if(left.nodeType ==NodeType.Leaf) {
+                ((LeafNode) right).getValues().push(((LeafNode) left).getValues().removeLast());
+            }else{
+                ((InterNode) right).getPointers().push(((InterNode) left).getPointers().removeLast());
+            }
+            right.getKeys().push(left.getKeys().removeLast());
+        }
+
+        if(left.nodeType ==NodeType.Leaf) {
+            parent.getKeys().add(keyIndex, right.getKeys().get(0));
+        }else{
+            ((InterNode) right).getPointers().push(((InterNode) left).getPointers().removeLast());
+        }
+        writeNode(parent);
+        writeNode(right);
+        writeNode(left);
     }
 
     private int caculateIndex(Node node,Long key) {
