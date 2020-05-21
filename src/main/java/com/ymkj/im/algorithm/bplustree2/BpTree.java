@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.LinkedList;
 
 public class BpTree {
@@ -16,13 +17,14 @@ public class BpTree {
     Long maxPageNum=0L; //最大页编号
     int maxKey; //每个节点最大key个数
     int minKey; //ceil(2m/2)-1
-    int m = 3;//2m为树的阶数;
+    int m = 120;//2m为树的阶数;
     int valLength=20;
     Node root;
-    int pageSize = 1024;//每页大小,单位字节
+    int pageSize = 8192;//每页大小,单位字节
     RandomAccessFile treeFile;
-    int currentIndex = 0;//当前页位置
+    Long rootIndex = 0L;
     String filePath = "data.bin";
+    int high=0;
 
     public BpTree() throws IOException {
         maxKey = 2*m-1;
@@ -33,12 +35,14 @@ public class BpTree {
             load();
         }else{
             //0-1024文件头占用,节点page页从1024开始
-            root = new LeafNode(NodeType.Leaf,1024L,-1L,-1L);
+            root = new LeafNode(NodeType.Leaf,getCurrentIndex(),-1L,-1L);
             writeNode(root);
             writeHeader(root);
         }
+    }
 
-
+    private void load() throws IOException {
+        root = readNode(rootIndex);
     }
 
 
@@ -47,6 +51,7 @@ public class BpTree {
         try {
             long length = treeFile.length();
             if (length > 0) {
+                rootIndex = treeFile.readLong();
                 maxPageNum = treeFile.readLong();
                 totalPages = treeFile.readInt();
             }
@@ -58,6 +63,7 @@ public class BpTree {
     private void writeHeader(Node node) throws IOException {
         totalPages++;
         treeFile.seek(0);
+        treeFile.writeLong(root.getPageIndex());
         treeFile.writeLong(node.getPageIndex());
         treeFile.writeInt(totalPages);
     }
@@ -116,14 +122,31 @@ public class BpTree {
         }
     }
 
-    private void load() throws IOException {
-        root = readNode(1024L);
+    public String search(Long key) throws IOException {
+        return searchInNode(root,key);
     }
 
+    public String searchInNode(Node node,Long key) throws IOException {
+        if(node.getNodeType()==NodeType.Leaf){
+            int index = node.getKeys().indexOf(key);
+            if(index >= 0){
+                return ((LeafNode)node).getValues().get(index);
+            }else{
+                return "没有找到！！！";
+            }
+        }else{
+            int index = caculateIndex(node,key);
+            long pageIndex = ((InterNode)node).getPointers().get(index);
+            Node child = readNode(pageIndex);
+            return searchInNode(child,key);
+        }
+    }
 
 
     public void insert(Long key,String value) throws IOException {
         if(isFull(root)){
+            high++;
+            System.out.println("树高:"+high);
             InterNode parent = new InterNode(NodeType.Internal,getCurrentIndex());
             writeHeader(parent);
             Node left = root;
@@ -133,6 +156,24 @@ public class BpTree {
             insertData(parent, key, value);
         }else {
             insertData(root, key, value);
+        }
+    }
+
+    public void insertData(Node node,Long key,String value) throws IOException {
+        int index = caculateIndex(node,key);
+        if(node.getNodeType()==NodeType.Leaf){
+            node.getKeys().add(index,key);
+            ((LeafNode)node).getValues().add(index,fillString(value));
+            writeNode(node);
+        }else{
+            //查找下一级判断是否满了，循环
+            Node child = readNode(((InterNode)node).getPointers().get(index));
+            if(isFull(child)){
+                splitNode((InterNode)node,child,key);
+                insertData(node,key,value);
+            }else{
+                insertData(child,key,value);
+            }
         }
     }
 
@@ -197,23 +238,7 @@ public class BpTree {
         return node.getKeys().size()==maxKey?true:false;
     }
 
-    public void insertData(Node node,Long key,String value) throws IOException {
-        int index = caculateIndex(node,key);
-        if(node.getNodeType()==NodeType.Leaf){
-            node.getKeys().add(index,key);
-            ((LeafNode)node).getValues().add(index,fillString(value));
-            writeNode(node);
-        }else{
-            //查找下一级判断是否满了，循环
-            Node child = readNode(((InterNode)node).getPointers().get(index));
-            if(isFull(child)){
-                splitNode((InterNode)node,child,key);
-                insertData(node,key,value);
-            }else{
-                insertData(child,key,value);
-            }
-        }
-    }
+
 
     private String fillString(String s) {
         if(s == null) {
@@ -246,16 +271,25 @@ public class BpTree {
     }
 
     public static void main(String[] args) throws IOException {
-//        Integer[] keys = new Integer[]{3633, 1713, 1687, 2257, 742, 4031, 477, 4604, 9713, 9210, 9860, 4917, 4727, 1622, 8852, 1859, 3952, 3218,
-//                8680, 2739, 5591, 6315, 3749, 5417, 1873, 9891, 2891, 1416};
-//        BpTree bpTree = new BpTree();
-//        for(int i=0;i<keys.length;i++){
-//            System.out.println(keys[i]);
-//            bpTree.insert((long)keys[i],keys[i]+"你好!");
+        BpTree bpTree = new BpTree();
+//        int n=0;
+//        Long start = new Date().getTime();
+//        for(int i=0;i<10000000;i++){
+//            bpTree.insert((long)i,i+"你好!");
+//            if(i%1000==0){
+//                n++;
+//                long cost = new Date().getTime()-start;
+//                System.out.println(n+" --------- "+cost+" ------ "+bpTree.totalPages);
+//                start = new Date().getTime();
+//            }
 //        }
-
-
-
+//        System.out.println(bpTree.totalPages);
+//        System.out.println(bpTree.getCurrentIndex());
+//        System.out.println(bpTree.root.getKeys());
+        Long start = new Date().getTime();
+        System.out.println(bpTree.search(129876L));
+        long cost = new Date().getTime()-start;
+        System.out.println(" --------- "+cost+" ------ ");
  
 
     }
