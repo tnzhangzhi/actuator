@@ -22,3 +22,6 @@ java  -XX:+PrintCommandLineFlags  -version 查看jvm使用的算法
 
 日志搜索
 cat -n all.log |grep "NullPointerException" -C 10
+
+查看TCP连接情况
+netstat -an | awk '/^tcp/ {++S[$NF]} END {for(a in S) print a, S[a]}'
