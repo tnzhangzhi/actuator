@@ -21,7 +21,7 @@ import org.springframework.transaction.TransactionManager;
 
 import javax.sql.DataSource;
 
-@Configuration
+//@Configuration
 @EnableBatchProcessing
 public class BatchConfiguration {
 
